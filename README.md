@@ -12,6 +12,15 @@ A personal AI assistant who analyzes personal data and provides answers to quest
 * I have used [CrewAI](https://www.crewai.com/) open sourced library for creating all AI-agents using their crew-based AI agent orchestration flow. 
 *  CrewAI is a cutting-edge framework for orchestrating role-playing, autonomous AI agents. It is built on top on [LangChain](https://www.langchain.com/) framework.
 * I have used [Chroma DB](https://python.langchain.com/v0.2/docs/integrations/vectorstores/chroma/) for building our Vector Database.
+* However, the original ChromaDB Langchain framework lacks certain features, hence, I have copied their github implementation and made necessary changes in the chroma file ```chroma_aya.py``` for it to work.
+    * Currently, the Langchain Chroma framework does not support returning the indices of the entry in the Database for Vector Similarity Searches and other search features. Refer to [this link](https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.chroma.Chroma.html). Hence, for this use case, I have tweaked their functionality to return the indexes and metadata as part of the simialrity searches.
+    * Main changes have been made in the following functions:
+        * `_results_to_docs_and_scores`
+        * `similarity_search`
+        * `similarity_search_by_vector`
+        * `similarity_search_by_vector_with_relevance_scores`
+        * `similarity_search_with_score`
+
 
 ## Architectural Diagram and Workflow
 ![Alt text](https://github.com/ayanavasarkar/personal_assistant/blob/main/ui_imgs/monochrome_diagram.jpeg)
@@ -19,6 +28,18 @@ A personal AI assistant who analyzes personal data and provides answers to quest
 ![Alt text](https://github.com/ayanavasarkar/personal_assistant/blob/main/ui_imgs/colorful_diagram.jpeg)
 
 ### Explanation of the Workflow:
+- First the user enters the Groq API to get started.
+- Next the user enters a query. Based on the user query, the `PromptClassifier` AI agent classifies the prompt into one of - `save something in memory`, `deduce memory from unstructured text`, `update memory`, 
+            `delete memory`, or `off_topic`.
+    - If it is classified as `off_topic`, then a general response is given by the LLM chat from the `generic_response` function inside `utils.py`.
+    - If it is classified as `save something in memory`, then the user must upload a text file along with it. 
+        - If the input file is provided then the `ExtractFromUploadedFile` Agent extracts the necessary details and uploads it into the vector DB. The default path for the DB is set as `/tmp/db`. You can change it.
+        - If the input file is not given, then the user is prompted to upload one.
+    - If the prompt is classified as `deduce memory from unstructured text`, then we compose a Chroma DB vector retriever who uses the Llama LLM embeddings to retrieve a response to the query based on the database information. \
+    *Currently the AI Agents have been specifically prompted to answer based on context only present in the DB. If no information is there in the DB then the Agent will output that it does not know the answer to the query.*
+    - If the query is classified as `update memory`, we extract the exact text from the DB based on `similarity_search` between the prompt and the database entries. Then we call the `MemoryManagement` Agent to delete locate the necessary detail in the text, remove the old value and enter the new value from the user query. Then we write back to the DB with the updated value.
+    - If the query is classified as `delete memory`, then the `CategoryExtraction` agent is called to find the exact ddetail or category to delete from the user data. Based on the detail extracted, we find the most similar text in the Chroma DB and use the `DeleteMemory` agent to delete only the necessary part.
+
 
 
 ### Note: Limitations
