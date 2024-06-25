@@ -43,7 +43,9 @@ def _results_to_docs_and_scores(results: Any) -> List[Tuple[Document, float]]:
         # we shouldn't hard code to the 1st result
         (
             Document(
-                page_content=result[0], metadata=(result[1] | {"id": result[3]}) or {}
+                # page_content=result[0], metadata=(result[1] | {"id": result[3]} | "Null") or {}
+                page_content=result[0], metadata=({"id": result[3]}) or {}
+
             ),
             result[2],
         )

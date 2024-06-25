@@ -17,9 +17,10 @@ class Utils():
     def __init__(self) -> None:
         self.embedding = HuggingFaceInstructEmbeddings(model_name="hkunlp/instructor-base")
 
-    def load_model(self):
+    def load_model(self, api_key):
+        # os.environ.get("GROQ_API_KEY")
         model = ChatGroq(
-                api_key=os.environ.get("GROQ_API_KEY"),
+                api_key= api_key,
                 model="llama3-70b-8192"
             )
         return model

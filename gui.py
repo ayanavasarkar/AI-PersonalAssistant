@@ -3,7 +3,7 @@ from langchain.memory.chat_message_histories import StreamlitChatMessageHistory
 from langchain.tools import DuckDuckGoSearchRun
 from langchain.chains import RetrievalQA
 from langchain.memory import ConversationBufferMemory
-import os
+import os, time
 
 from utils import *
 from ai_agents import *
@@ -43,8 +43,22 @@ def main():
     # Init the Utils class
     utils = Utils()
 
+    progress_text = "Please Enter API Key of Groq"
+    my_bar = st.progress(0, text=progress_text)
+
+    for percent_complete in range(100):
+        if not api_key:
+            time.sleep(0.01)
+            my_bar.progress(percent_complete + 1, text=progress_text)
+            time.sleep(1)
+            my_bar.empty()
+            continue
+        else:
+            my_bar.empty()
+            break
+        
     # Load the LLM Model
-    model = utils.load_model()
+    model = utils.load_model(api_key)
     ai_agents = AI_Agents(model, "./text_files")
     # Load the Chroma Database or Return Null if nothing is there in DB
     vectordb = utils.load_db()
@@ -80,7 +94,6 @@ def main():
             if new_file_uploaded:
                 ai_message("Data uploaded")
                 structured_output = ai_agents.extract_from_uploaded_file(uploaded_file)
-                ai_message(structured_output['final_output'])
                 
                 # Remove the pre-existing Extracted Text
                 # if os.path.exists("extracted_info.txt"):
@@ -95,7 +108,7 @@ def main():
                 
                 # Store the Extracted Data in Database
                 # utils.store_in_db("extracted_info.txt")
-                utils.store_in_db(structured_output['final_output'])
+                utils.store_in_db(structured_output)
                 ai_message("Data stored in DB")
             
             else:
@@ -140,7 +153,7 @@ def main():
 
             ai_message("Deleting Memory")
             updated_memory = ai_agents.delete_memory(prompt, db_result)
-
+            document = db_result
             if len(updated_memory)>0:
                 document.page_content = updated_memory
                 vectordb.update_document(db_index, document)

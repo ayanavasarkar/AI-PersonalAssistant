@@ -22,7 +22,7 @@ class AI_Agents():
 
         data_agent = self.agent.agent_extractPersonalInfo()
         # Kick off the crew's work
-        data_task = self.task.task_personalInfo(data, data_agent)
+        data_task = self.tasks.task_personalInfo(data, data_agent)
 
         # Instantiate your crew with a sequential process
         data_crew = Crew(
