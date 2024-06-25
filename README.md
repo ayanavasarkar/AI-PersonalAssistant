@@ -7,4 +7,4 @@ A personal AI assistant who analyzes personal data and provides answers to quest
 * Answer any questions about the personal details contained in the DB.
 * General chat with Groq Llama LLM.
 
-![Alt text](relative%20personal_assistant/ui_imgs/monochrome_diagram.jpeg?raw=true "Detailed Architectural Flow")
+![Alt text](https://github.com/ayanavasarkar/personal_assistant/blob/main/ui_imgs/monochrome_diagram.jpeg)
