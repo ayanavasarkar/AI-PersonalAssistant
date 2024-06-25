@@ -23,8 +23,6 @@ def setup_sidebar():
     # st.sidebar.text("Select tools:")
     # st.sidebar.checkbox("Search (DuckDuckGo) 🪿", value=True, disabled=True)
 
-    # selected_tools = [available_tools["Search"]]
-
     st.sidebar.text("Select Options:")
 
     # Tool selections
@@ -84,15 +82,20 @@ def main():
                 structured_output = ai_agents.extract_from_uploaded_file(uploaded_file)
                 ai_message(structured_output['final_output'])
                 
-                if os.path.exists("extracted_info.txt"):
-                    with open("extracted_info.txt", "a+") as text_file:
-                        text_file.write(structured_output['final_output'])
-                else:
-                    with open("extracted_info.txt", "wb") as text_file:
-                        text_file.write(structured_output['final_output'])
+                # Remove the pre-existing Extracted Text
+                # if os.path.exists("extracted_info.txt"):
+                    # with open("extracted_info.txt", "a+") as text_file:
+                    #     text_file.write(structured_output['final_output'])
+                    # os.remove("extracted_info.txt")
+
+                # Write the extracted Text in a file
+                # else:
+                #     with open("extracted_info.txt", "wb") as text_file:
+                #         text_file.write(structured_output['final_output'])
                 
                 # Store the Extracted Data in Database
-                utils.store_in_db("extracted_info.txt")
+                # utils.store_in_db("extracted_info.txt")
+                utils.store_in_db(structured_output['final_output'])
                 ai_message("Data stored in DB")
             
             else:

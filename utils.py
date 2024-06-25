@@ -8,6 +8,9 @@ from InstructorEmbedding import INSTRUCTOR
 from chroma_aya import Chroma_AYA
 from langchain_community.document_loaders import TextLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_core.documents import Document
+from sentence_transformers import SentenceTransformer, util
+
 
 class Utils():
 
@@ -34,7 +37,6 @@ class Utils():
         
         if os.path.exists(path):
             # Loading the preexisting DB
-            print("Loading DB....")
             vectordb = Chroma_AYA(persist_directory=path, 
                     embedding_function=self.embedding)
             
@@ -51,13 +53,26 @@ class Utils():
         texts = text_splitter.split_documents(text)
         return texts
 
+    def compare_new_data_to_db(self, splitted_texts):
+        model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
+
+        #Compute embedding for both lists
+        # embedding_1= model.encode(texts[0].page_content, convert_to_tensor=True)
+        # embedding_2 = model.encode(t_da, convert_to_tensor=True)
+
+        # util.pytorch_cos_sim(embedding_1, embedding_2)
+        # for each_split in splitted_texts:
+        #     page_content = each_split.page_content
+        # pass
+
     def store_in_db(self, data_path):
         
         persist_directory = '/tmp/db'
+        # loader = TextLoader(data_path)
+        # documents = loader.load()
+        splitted_texts = self.text_splitter([Document(page_content=data_path, metadata={})])
 
-        loader = TextLoader(data_path)
-        documents = loader.load()
-        splitted_texts = self.text_splitter(documents)
+        # new_texts = self.compare_new_data_to_db(splitted_texts)
 
         if os.path.exists(persist_directory):
             # Loading the preexisting DB
