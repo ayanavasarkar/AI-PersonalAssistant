@@ -7,13 +7,19 @@ A personal AI assistant who analyzes personal data and provides answers to quest
 * Answer any questions about the personal details contained in the DB.
 * General chat with Groq Llama LLM.
 
+## Brief Overview of Used Frameworks
+* I have used here the open-sourced Llama model (8-billion parameter) as the base LLM for this implementation. Currently, [Groq Cloud](https://console.groq.com/playground) provides a free API for its usage on their cloud.
+* I have used [CrewAI](https://www.crewai.com/) open sourced library for creating all AI-agents using their crew-based AI agent orchestration flow. 
+*  CrewAI is a cutting-edge framework for orchestrating role-playing, autonomous AI agents. It is built on top on [LangChain](https://www.langchain.com/) framework.
+* I have used [Chroma DB](https://python.langchain.com/v0.2/docs/integrations/vectorstores/chroma/) for building our Vector Database.
+
 ## Architectural Diagram and Workflow
 ![Alt text](https://github.com/ayanavasarkar/personal_assistant/blob/main/ui_imgs/monochrome_diagram.jpeg)
 
 ![Alt text](https://github.com/ayanavasarkar/personal_assistant/blob/main/ui_imgs/colorful_diagram.jpeg)
 
 ### Explanation of the Workflow:
-dd
+
 
 ### Note: Limitations
 1. The system currently only accepts ```.txt``` files. Any other file will throw an Exception and crash the GUI.
