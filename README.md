@@ -6,3 +6,5 @@ A personal AI assistant who analyzes personal data and provides answers to quest
 * Delete any particular user information from the DB as per the user prompt.
 * Answer any questions about the personal details contained in the DB.
 * General chat with Groq Llama LLM.
+
+![Alt text](relative%20personal_assistant/ui_imgs/monochrome_diagram.jpeg?raw=true "Detailed Architectural Flow")
