@@ -22,6 +22,19 @@ A personal AI assistant who analyzes personal data and provides answers to quest
         * `similarity_search_with_score`
 
 
+## How to run the StreamLit UI
+
+1. Load all the necessary libraries. They have been mentioned in the ```requirements.txt```.
+Make sure that the versions of ```LangChain``` and ```PyDantic``` match.
+
+2. When everything is installed, set up an account on [Groq Cloud](https://console.groq.com/playground). 
+
+3. Create an API key for the Llama 8B parameter version from the Groq cloud account. Set up the API key on your local machine using ```export GROQ_API_KEY=<your-api-key-here>```.
+
+4. Until the time of writing setting up and using Groq for Llama is free. This may change over time. In that case, use some other keys and make changes likewise to the model inside the file ```utils.py```.
+
+5. `cd AI-PersonalAssistant` and run `streamlit run gui.py` for the GUI version. Run `python3 non_gui.py` for the the Non-Gui version.
+
 ## Architectural Diagram and Workflow
 ![Alt text](https://github.com/ayanavasarkar/personal_assistant/blob/main/ui_imgs/monochrome_diagram.jpeg)
 
@@ -69,16 +82,17 @@ A personal AI assistant who analyzes personal data and provides answers to quest
 
 4. The agents have been specifically prompted to not answer anything beyond the data present in the DB. Hence, for questions requiring some amount of analysis, the system does not answer them.
 
-## How to run the StreamLit UI
+## Future Prospocts:
+Following are the features that would be focused on in the near future:
 
-1. Load all the necessary libraries. They have been mentioned in the ```requirements.txt```.
-Make sure that the versions of ```LangChain``` and ```PyDantic``` match.
+1. Integrate the DB checking when new data is uploaded, so that duplicates are not present in the DB. This can be done in a variety of ways:
+    - When data is extracted by the `ExtractFromUploadedFile` Agent, do a check across each entry in the DB using similarity to see if the new data entered is already present in the DB. However, this slows down the process and also a good threshold for the similarity threshold must be experimented with. Further, the proper embedding structure must also be tested. \
+    *Based on some initial set of experiments, we can use the `SentenceTransformer` for embedding the input and using a postgres to store the embeddings of each category already in the DB. Then do just a quick similarity comparison to figure out if that entry is already present in the DB.*
 
-2. When everything is installed, set up an account on [Groq Cloud](https://console.groq.com/playground). 
+    - Maintain another vector DB where the chuck sizes are small and after every N-seconds, the DB is loaded and duplicates are removed. (Easier to build and maintain, but absolutely Non-scalable for large systems.)
 
-3. Create an API key for the Llama 8B parameter version from the Groq cloud account. Set up the API key on your local machine using ```export GROQ_API_KEY=<your-api-key-here>```.
+2. Currently, I record the history of the chat conversation, but the previous chats have no influence on the current prompt. Induce some form of history where the system has a short-term, long-term and eventual memory. Useful in the following case:
+*User Prompt 1- What is the EMail ID?; AI ANSWERS - test@g.com* \
+*User Prompt 2 - Can you update it?; AI ANSWER - WHat is it?*
 
-4. Until the time of writing setting up and using Groq for Llama is free. This may change over time. In that case, use some other keys and make changes likewise to the model inside the file ```utils.py```.
-
-5. `cd AI-PersonalAssistant` and run `streamlit run gui.py` for the GUI version. Run `python3 non_gui.py` for the the Non-Gui version.
-
+3. Currently, this system functions as a Personal Assistant based on the details of only one-person. Extention beyond one-person to something like this for a family or a group of people would be interesting.
