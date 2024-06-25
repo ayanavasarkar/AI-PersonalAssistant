@@ -51,6 +51,14 @@ A personal AI assistant who analyzes personal data and provides answers to quest
     *Eg - delete the email id*
 
 
+### Files in this Repo:
+- `gui.py` - It contains the gui-based implementation of the entire system.
+- `non-gui.py` - It contains the non-gui-based implementation of the system. Currently it has a terminal-based UI.
+- `utils.py` - The utility functions for model loading, Chroma DB loading, storing the db to disk, splitting raw text into chunks based on the `RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)` before embedding the chunks and storing them in DB.
+- `ai_agents.py` - Contains all the AI agent crews required for the various jobs in this implementation, as discussed above.
+- `agents.py` - Contains all the initialization of the AI agents with specific prompts for each of their jobs.
+- `tasks.py` - Contains the initialization and detailed prompts of the tasks of each of the agents, including, the exact input data, their detailed tasks and the expected output from each of the crews.
+- `tests/test_jobs.py` - Contains the unit tests for each of the crews, agents and tasks.
 
 ### Note: Limitations
 1. The system does not have memory of previous conversations and user queries yet. `StreamlitChatMessageHistory` has a functionality which integrates with the `CrewAI` library's `ConversationBufferMemory` to keep track of the user queries. However, there seems to be some discrepancies causing the auto functionality to non properly function.
