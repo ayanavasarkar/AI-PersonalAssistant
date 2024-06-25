@@ -16,7 +16,7 @@ class Utils():
 
     def load_model(self):
         model = ChatGroq(
-                api_key=os.environ.get("GROQ_API_KEY"),  #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",
+                api_key=os.environ.get("GROQ_API_KEY"),
                 model="llama3-70b-8192"
             )
         return model
